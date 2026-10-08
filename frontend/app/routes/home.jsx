@@ -9,7 +9,7 @@ export function Message(props) {
   )
 }
 
-export default function Home() {
+export function ChatMessages() {
   return (
     <main className="chat-container">
       <div className="chat-messages">
@@ -70,8 +70,14 @@ export default function Home() {
         />
 
       </div>
+    </main>
+  )
+}
 
-      {/* Chat input area */}
+export default function Home() {
+  return (
+    <div>
+      <ChatMessages />
       <div className="chat-input-container">
         <div className="chat-input-wrapper">
           <textarea
@@ -84,6 +90,7 @@ export default function Home() {
           </button>
         </div>
       </div>
-    </main>
+    </div>
+
   );
 }
