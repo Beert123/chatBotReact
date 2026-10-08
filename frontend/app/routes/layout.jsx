@@ -28,101 +28,27 @@ export function SidebarFooter() {
   )
 }
 
+export function ChatThreadItem(props) {
+  return (
+    <li className="chat-thread-item">
+      <a
+        href={props.href} className="chat-thread-link">
+        {props.title}
+      </a>
+    </li>
+  )
+}
+
 export function ChatThreadsList() {
   return (
     <nav className="chat-threads-list" aria-label="Chat threads">
       <ul>
-        <li className="chat-thread-item">
-          <a
-            href="/chat/how-to-learn-programming"
-            className="chat-thread-link"
-          >
-            How to learn programming?
-          </a>
-        </li>
-        <li className="chat-thread-item">
-          <a href="/chat/best-pizza-toppings" className="chat-thread-link">
-            What are the best pizza toppings?
-          </a>
-        </li>
-        <li className="chat-thread-item">
-          <a
-            href="/chat/explain-quantum-physics"
-            className="chat-thread-link"
-          >
-            Can you explain quantum physics?
-          </a>
-        </li>
-        <li className="chat-thread-item">
-          <a
-            href="/chat/morning-routine-ideas"
-            className="chat-thread-link"
-          >
-            Help me create a morning routine
-          </a>
-        </li>
-        <li className="chat-thread-item">
-          <a
-            href="/chat/weekend-activity-suggestions"
-            className="chat-thread-link"
-          >
-            What should I do this weekend?
-          </a>
-        </li>
-        <li className="chat-thread-item">
-          <a href="/chat/why-sky-blue" className="chat-thread-link">
-            Why is the sky blue?
-          </a>
-        </li>
-        <li className="chat-thread-item">
-          <a href="/chat/learn-new-language" className="chat-thread-link">
-            How do I learn a new language?
-          </a>
-        </li>
-        <li className="chat-thread-item">
-          <a href="/chat/meaning-of-life" className="chat-thread-link">
-            What's the meaning of life?
-          </a>
-        </li>
-        <li className="chat-thread-item">
-          <a href="/chat/funny-joke-please" className="chat-thread-link">
-            Tell me a funny joke
-          </a>
-        </li>
-        <li className="chat-thread-item">
-          <a href="/chat/healthy-dinner-ideas" className="chat-thread-link">
-            What's a healthy dinner idea?
-          </a>
-        </li>
-        <li className="chat-thread-item">
-          <a
-            href="/chat/good-book-recommendations"
-            className="chat-thread-link"
-          >
-            Recommend me a good book
-          </a>
-        </li>
-        <li className="chat-thread-item">
-          <a
-            href="/chat/creative-writing-prompt"
-            className="chat-thread-link"
-          >
-            Give me a creative writing prompt
-          </a>
-        </li>
-        <li className="chat-thread-item">
-          <a href="/chat/fix-slow-computer" className="chat-thread-link">
-            My computer is slow, help?
-          </a>
-        </li>
-        <li className="chat-thread-item">
-          <a
-            href="/chat/interesting-history-fact"
-            className="chat-thread-link"
-          >
-            Tell me an interesting history fact
-          </a>
-        </li>
+        <ChatThreadItem href="/chat/why-sky-blue" title="Why is the sky blue?" />
+        <ChatThreadItem href="/chat/How-to-eat-cate" title="My name is jeff" />
+        <ChatThreadItem href="/chat/test1" title="Who is Noah?" />
+        <ChatThreadItem href="/chat/test2" title="I like cake" />
+        <ChatThreadItem href="/chat/test3" title="This is a test!" />
+        <ChatThreadItem href="/chat/test4" title="It was an inside job" />
       </ul>
     </nav>
   )
@@ -132,7 +58,7 @@ export function Sidebar() {
   return (
     <aside className="sidebar">
       <SidebarHeader />
-      <ChatThreadsList/>
+      <ChatThreadsList />
       <SidebarFooter />
     </aside>
   );
