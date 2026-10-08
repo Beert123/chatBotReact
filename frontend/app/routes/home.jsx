@@ -70,7 +70,25 @@ export function ChatMessages() {
         />
 
       </div>
+
     </main>
+  )
+}
+
+export function ChatInput() {
+  return (
+    <div className="chat-input-container">
+      <div className="chat-input-wrapper">
+        <textarea
+          className="chat-input"
+          placeholder="Type your message here..."
+          rows="1"
+        />
+        <button className="send-button" type="button">
+          Send
+        </button>
+      </div>
+    </div>
   )
 }
 
@@ -78,19 +96,7 @@ export default function Home() {
   return (
     <div>
       <ChatMessages />
-      <div className="chat-input-container">
-        <div className="chat-input-wrapper">
-          <textarea
-            className="chat-input"
-            placeholder="Type your message here..."
-            rows="1"
-          />
-          <button className="send-button" type="button">
-            Send
-          </button>
-        </div>
-      </div>
+      <ChatInput/>
     </div>
-
   );
 }
