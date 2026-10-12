@@ -37,26 +37,28 @@ export function ChatThreadItem(props) {
   )
 }
 
-export function ChatThreadsList() {
+
+
+export function ChatThreadsList(props) {
   return (
     <nav className="chat-threads-list" aria-label="Chat threads">
       <ul>
-        <ChatThreadItem href="/chat/why-sky-blue" title="Why is the sky blue?" />
-        <ChatThreadItem href="/chat/How-to-eat-cate" title="My name is jeff" />
-        <ChatThreadItem href="/chat/test1" title="Who is Noah?" />
-        <ChatThreadItem href="/chat/test2" title="I like cake" />
-        <ChatThreadItem href="/chat/test3" title="This is a test!" />
-        <ChatThreadItem href="/chat/test4" title="It was an inside job" />
+        {props.threads.map(thread =>(
+            <ChatThreadItem 
+            key={thread.id} 
+            href={thread.href}
+            title={thread.title}></ChatThreadItem>
+        ))}
       </ul>
     </nav>
   )
 }
 
-export default function Sidebar() {
+export default function Sidebar(props) {
   return (
     <aside className="sidebar">
       <SidebarHeader />
-      <ChatThreadsList />
+      <ChatThreadsList threads={props.threads} />
       <SidebarFooter />
     </aside>
   );
