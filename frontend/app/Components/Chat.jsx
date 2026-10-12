@@ -1,24 +1,25 @@
-export function Message(props) {
+import { useState } from "react"
+
+export function Message({user, children}) {
     return (
-        <div className={`message ${props.user}-message`}>
+        <div className={`message ${user}-message`}>
             <div className="message-content">
-                {props.children}
+            {children}
             </div>
         </div>
     )
 }
 
-export function ChatMessages(props) {
+export function ChatMessages({messages}) {
     return (
         <main className="chat-container">
             <div className="chat-messages">
-                {props.messages.map(message =>(
+                {messages.map(message =>(
                     <Message key={message.id} user={message.user}>
                         {message.content}
                     </Message>
                 ))}
             </div>
-
         </main>
     )
 }
