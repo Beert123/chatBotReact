@@ -86,6 +86,47 @@ body {
 .new-chat-btn:hover {
   background: var(--bg-hover);
 }
+/* Chat thread items */
+.chat-thread-item {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-bottom: 0.25rem;
+  border-radius: 8px;
+}
+
+.chat-thread-link {
+  flex: 1;
+  min-width: 0;
+  display: block;
+  padding: 0.7rem 0.75rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  border-radius: 8px;
+}
+
+.delete-chat-btn {
+  flex-shrink: 0;
+  border: none;
+  background: transparent;
+  color: #737373;
+  padding: 0.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s ease, background 0.15s ease;
+}
+
+.chat-thread-item:hover .delete-chat-btn,
+.delete-chat-btn:focus-visible {
+  opacity: 1;
+}
+
+.delete-chat-btn:hover {
+  background: #e5e5e5;
+  color: #111;
+}
 
 /* Chat threads list */
 .chat-threads-list {
