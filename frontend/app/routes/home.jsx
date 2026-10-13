@@ -1,7 +1,8 @@
+import { useState } from "react";
 import { ChatInput,ChatMessages} from "../Components/Chat";
 
 
-const messages = [
+const initMessages = [
     {
         id: 1,
         user: "user",
@@ -55,10 +56,21 @@ const messages = [
 ];
 
 export default function Home() {
+  const [messages, setMessages] = useState(initMessages);
+
+  function addMessage(text){
+    const newMessage = {
+      id: messages.length + 1,
+      user: "user",
+      content: text
+    }
+    setMessages([...messages, newMessage])
+  }
+
   return (
     <div>
       <ChatMessages messages ={messages} />
-      <ChatInput/>
+      <ChatInput onAddMessage={addMessage}/>
     </div>
   );
 }
