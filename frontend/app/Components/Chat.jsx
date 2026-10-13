@@ -1,5 +1,5 @@
 import { useState } from "react"
-
+import React from "react";
 export function Message({ user, children }) {
     return (
         <div className={`message ${user}-message`}>

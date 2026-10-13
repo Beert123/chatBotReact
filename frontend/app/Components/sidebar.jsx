@@ -1,3 +1,4 @@
+import React from "react";
 export function SidebarHeader() {
     return (
         <div className="sidebar-header">
@@ -27,6 +28,7 @@ export function SidebarFooter() {
 }
 
 export function ChatThreadItem({ href, title, id, onDelete }) {
+
     return (
         <li className="chat-thread-item">
             <a
@@ -47,11 +49,25 @@ export function ChatThreadItem({ href, title, id, onDelete }) {
 
 
 
-export function ChatThreadsList({threads,onDelete}) {
+export function ChatThreadsList({threads = [],onDelete}) {
+    const [searchValue, setSearchValue] = React.useState("");
+
+    const handleChange = (e) =>{
+        setSearchValue(e.target.value);
+    }
+    const filterThreads = threads.filter((thread) =>
+    thread.title.includes(searchValue));
+
     return (
         <nav className="chat-threads-list" aria-label="Chat threads">
+            <input
+            type="text"
+            className="search-input"
+            value={searchValue}
+            onChange={handleChange}>
+            </input>
             <ul>
-                {threads.map(thread => (
+                {filterThreads.map(thread => (
                     <ChatThreadItem
                         key={thread.id}
                         id={thread.id}
@@ -59,7 +75,6 @@ export function ChatThreadsList({threads,onDelete}) {
                         title={thread.title}
                         onDelete={onDelete}
                         />
-                    
                 ))}
             </ul>
         </nav>

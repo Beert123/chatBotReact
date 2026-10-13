@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ChatInput,ChatMessages} from "../Components/Chat";
-
+import React from "react";
 
 const initMessages = [
     {
@@ -56,7 +56,7 @@ const initMessages = [
 ];
 
 export default function Home() {
-  const [messages, setMessages] = useState(initMessages);
+  const [messages, setMessages] = React.useState(initMessages);
 
   function addMessage(text){
     const newMessage = {
