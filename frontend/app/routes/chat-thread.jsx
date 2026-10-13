@@ -1,8 +1,16 @@
 import { useState } from "react";
 import { useParams } from "react-router";
 import { ChatMessages, ChatInput } from "../components/Chat.jsx";
+import { useLoaderData } from "react-router";
 
-const defaultMessages = [
+
+export async function clientLoader({ params }) {
+    const threadid = params.threadId;
+
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
+    //mockdata
+    const defaultMessages = [
     {
         id: 1,
         type: "user",
@@ -14,19 +22,14 @@ const defaultMessages = [
         content: "bot",
     },
 ];
+    return {threadId: threadid, messages: defaultMessages}
+}
 
 export default function ChatThread() {
-    const [messages,setMessages] = useState([defaultMessages]);
-
-    const { threadId } = useParams();
+    const {threadId,messages} = useLoaderData();
 
     const addMessage = (text) => {
-        const newMessage = {
-            id: messages.length +1,
-            type: "user",
-            content: text
-        }
-        setMessages([...messages,newMessage]);
+        console.log("tid: " + threadId + "messages: " + messages, "text: " + text) 
     }
     return (
         <main className="chat-container">
