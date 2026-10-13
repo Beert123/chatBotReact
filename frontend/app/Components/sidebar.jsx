@@ -1,11 +1,12 @@
 import React from "react";
+import { Link, href} from "react-router";
 export function SidebarHeader() {
     return (
         <div className="sidebar-header">
             <h2 className="chatbot-title">Chatbot</h2>
-            <a href="/chat/new" className="new-chat-btn">
+            <Link to="/chat/new" className="new-chat-btn">
                 + New
-            </a>
+            </Link>
         </div>
     )
 }
@@ -27,14 +28,16 @@ export function SidebarFooter() {
     )
 }
 
-export function ChatThreadItem({ href, title, id, onDelete }) {
+export function ChatThreadItem({ thread, onDelete }) {
+    const { id, title } = thread;
 
     return (
         <li className="chat-thread-item">
-            <a
-                href={href} className="chat-thread-link">
+            <Link
+                to={href("/chat/:threadId", { threadId: id })}
+                className="chat-thread-link">
                 {title}
-            </a>
+            </Link>
             <button
                 type="button"
                 className="delete-chat-btn"
@@ -49,45 +52,43 @@ export function ChatThreadItem({ href, title, id, onDelete }) {
 
 
 
-export function ChatThreadsList({threads = [],onDelete}) {
+export function ChatThreadsList({ threads = [], onDelete }) {
     const [searchValue, setSearchValue] = React.useState("");
 
-    const handleChange = (e) =>{
+    const handleChange = (e) => {
         setSearchValue(e.target.value);
     }
     const filterThreads = threads.filter((thread) =>
-    thread.title.includes(searchValue));
+        thread.title.includes(searchValue));
 
     return (
         <nav className="chat-threads-list" aria-label="Chat threads">
             <input
-            type="text"
-            className="search-input"
-            value={searchValue}
-            onChange={handleChange}>
+                type="text"
+                className="search-input"
+                value={searchValue}
+                onChange={handleChange}>
             </input>
             <ul>
                 {filterThreads.map(thread => (
                     <ChatThreadItem
                         key={thread.id}
-                        id={thread.id}
-                        href={thread.href}
-                        title={thread.title}
+                        thread={thread}
                         onDelete={onDelete}
-                        />
+                    />
                 ))}
             </ul>
         </nav>
     )
 }
 
-export default function Sidebar({threads, onDelete}) {
+export default function Sidebar({ threads, onDelete }) {
     return (
         <aside className="sidebar">
             <SidebarHeader />
-            <ChatThreadsList 
-            threads={threads} 
-            onDelete={onDelete} />
+            <ChatThreadsList
+                threads={threads}
+                onDelete={onDelete} />
             <SidebarFooter />
         </aside>
     );

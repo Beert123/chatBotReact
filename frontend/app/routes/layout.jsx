@@ -5,22 +5,18 @@ import { useState } from "react";
 const initThreads = [
   {
     id: 1,
-    href: "Why sy blue",
     title: "why-blue"
   },
   {
     id: 2,
-    href: "test1",
     title: "testetsetste1"
   },
   {
     id: 3,
-    href: "test2",
     title: "jasdjasjdasjd"
   },
   {
     id: 4,
-    href: "grød",
     title: "min-morgenmad-er-lækker"
   },
 ]
