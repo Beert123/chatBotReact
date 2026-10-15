@@ -87,6 +87,20 @@ body {
   background: var(--bg-hover);
 }
 /* Chat thread items */
+/* chatthread step 3 opg 5*/
+.chat-thread-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}
+
+.chat-thread-link-active {
+    background-color: #34343f;
+    color: white;
+    font-weight: bold;
+    border-radius: 6px;
+}
+/*hertil*/
 .chat-thread-item {
   display: flex;
   align-items: center;
