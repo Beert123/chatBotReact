@@ -1,39 +1,43 @@
-import { Outlet } from "react-router";
+import { Outlet, useLoaderData } from "react-router";
 import Sidebar from "../Components/sidebar";
-import { useState } from "react";
 
 const initThreads = [
   {
-    id: 1,
+    id: "1",
     title: "why-blue"
   },
   {
-    id: 2,
+    id: "2",
     title: "testetsetste1"
   },
   {
-    id: 3,
+    id: "3",
     title: "jasdjasjdasjd"
   },
   {
-    id: 4,
+    id: "4",
     title: "min-morgenmad-er-lækker"
   },
 ]
 
-export async function ClientLoader() {
-  
-  return 0;
+export async function clientLoader() {
+  await new Promise((resolve) => setTimeout(resolve,300));
+  return {threads: initThreads};
 }
 
 export default function Layout() {
-  const [threads, setThreads] = useState(initThreads)
+  const {threads} = useLoaderData();
 
+  function handleDelete(id){
+    console.log("delete this thread: " + id)
+  }
+  /*
   function handleDelete(id) {
     setThreads((threads) =>
       threads.filter((thread) => thread.id !== id)
     );
   }
+  */
 
   return (
     <div className="app-layout">
