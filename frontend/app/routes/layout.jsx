@@ -1,6 +1,7 @@
 import { Outlet, useLoaderData } from "react-router";
 import Sidebar from "../Components/sidebar";
 
+
 const initThreads = [
   {
     id: "1",
@@ -21,14 +22,28 @@ const initThreads = [
 ]
 
 export async function clientLoader() {
-  await new Promise((resolve) => setTimeout(resolve,300));
-  return {threads: initThreads};
+
+  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+  const supabasePublishableKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY
+
+  const apiUrl = `${supabaseUrl}/threads?select=id,title`;
+  const res = await fetch(apiUrl, {
+    method: "GET",
+    headers: {
+      apikey: supabasePublishableKey,
+      Authorization: `Bearer ${supabasePublishableKey}`,
+    },
+  })
+  const threads = await res.json();
+  console.log(threads);
+
+  return { threads: threads};
 }
 
 export default function Layout() {
-  const {threads} = useLoaderData();
+  const { threads } = useLoaderData();
 
-  function handleDelete(id){
+  function handleDelete(id) {
     console.log("delete this thread: " + id)
   }
   /*
@@ -41,9 +56,9 @@ export default function Layout() {
 
   return (
     <div className="app-layout">
-      <Sidebar 
-      threads={threads}
-      onDelete={handleDelete} />
+      <Sidebar
+        threads={threads}
+        onDelete={handleDelete} />
       <main className="main-content">
         <Outlet />
       </main>
