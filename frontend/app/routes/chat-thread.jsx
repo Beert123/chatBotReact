@@ -5,36 +5,55 @@ import { useLoaderData } from "react-router";
 
 
 export async function clientLoader({ params }) {
-    const threadid = params.threadId;
+    
+        console.log("Route params:", params);
 
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    const threadId = params.threadId;
+    console.log("Thread ID:", threadId);
 
-    //mockdata
-    const defaultMessages = [
-    {
-        id: 1,
-        type: "user",
-        content: "user",
-    },
-    {
-        id: 2,
-        type: "bot",
-        content: "bot",
-    },
-];
-    return {threadId: threadid, messages: defaultMessages}
+    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+    const supabasePublishableKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+    const apiUrl = `${supabaseUrl}/threads?id=eq.${threadId}&select=*`
+    const res = await fetch(apiUrl, {
+        method: "GET",
+        headers: {
+            apikey: supabasePublishableKey,
+            Authorization: `Bearer ${supabasePublishableKey}`,
+        },
+    })
+
+    const data = await res.json();
+    const thread = data[0];
+
+    if (!thread) {
+        throw new Response("Thread not found", { status: 404 });
+    }
+    const messagesResponse = await fetch(
+        `${supabaseUrl}/messages?thread_id=eq.${threadId}&select=*&order=created_at.asc`,
+        {
+            headers: {
+                apikey: supabasePublishableKey,
+                Authorization: `Bearer ${supabasePublishableKey}`,
+            },
+        }
+    );
+    const messages = await messagesResponse.json();
+
+    return { thread, messages }
 }
 
+
 export default function ChatThread() {
-    const {threadId,messages} = useLoaderData();
+    const { thread, messages } = useLoaderData();
 
     const addMessage = (text) => {
-        console.log("tid: " + threadId + "messages: " + messages, "text: " + text) 
+        console.log("tid: " + thread.id + "messages: " + messages, "text: " + text)
     }
+
     return (
         <main className="chat-container">
             <div className="chat-thread-header">
-                <h2>Conversation Thread {threadId}</h2>
+                <h2>Conversation Thread {thread.title}</h2>
             </div>
             <ChatMessages messages={messages} />
             <ChatInput onAddMessage={addMessage} />
