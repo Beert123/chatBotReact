@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useParams } from "react-router";
+import { useActionData, useParams } from "react-router";
 import { ChatMessages, ChatInput } from "../components/Chat.jsx";
 import { useLoaderData } from "react-router";
 import { Form } from "react-router";
@@ -50,35 +50,42 @@ export async function clientAction({ params, request }) {
     const formData = await request.formData();
     const fieldValue = formData.get("message")
 
-    if (!fieldValue) {
+    if (!fieldValue || !fieldValue.trim()) {
         return { error: "mesage is empty" };
     }
+
     const newMessage = {
         thread_id: params.threadId,
         type: "user",
-        content: fieldValue,
+        content: fieldValue.trim(),
     }
+    try {
+        const res = await fetch(`${supabaseUrl}messages`, {
+            method: "POST",
+            headers: {
+                apikey: supabasePublishableKey,
+                Authorization: `Bearer ${supabasePublishableKey}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(newMessage)
+        })
 
-    const res = await fetch(`${supabaseUrl}messages`, {
-        method: "POST",
-        headers: {
-            apikey: supabasePublishableKey,
-            Authorization: `Bearer ${supabasePublishableKey}`,
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(newMessage)
-    })
+        if (!res.ok) {
+            return { error: "coudlnt fetch supabase message" }
+        }
 
-    if (!res.ok) {
-        return { error: "coudlnt fetch supabase message" }
+        return { succes: true }
+
+    } catch (e) {
+        return { error: e.message }
     }
-
-    return { succes: true }
 
 }
 
 export default function ChatThread() {
     const { threadId, messages } = useLoaderData();
+
+    const actionData = useActionData();
 
     const addMessage = (text) => {
         console.log("tid: " + threadId + "messages: " + messages, "text: " + text)
@@ -90,6 +97,9 @@ export default function ChatThread() {
             </div>
             <ChatMessages messages={messages} />
             <ChatInput onAddMessage={addMessage} />
+            {actionData?.error && (
+                <div className="error-message">{actionData.error}</div>
+            )}
         </main>
     )
 }
