@@ -22,18 +22,10 @@ const initThreads = [
 ]
 
 export async function clientLoader() {
+  const apiUrl = import.meta.env.VITE_API_URL
+  const url = `${apiUrl}/api/threads`;
 
-  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
-  const supabasePublishableKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY
-
-  const apiUrl = `${supabaseUrl}/threads?select=id,title`;
-  const res = await fetch(apiUrl, {
-    method: "GET",
-    headers: {
-      apikey: supabasePublishableKey,
-      Authorization: `Bearer ${supabasePublishableKey}`,
-    },
-  })
+  const res = await fetch(url)
   const threads = await res.json();
   console.log(threads);
 
