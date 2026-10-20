@@ -1,5 +1,6 @@
 import { useState } from "react"
 import React from "react";
+import { Form, useNavigation } from "react-router";
 export function Message({ user, children }) {
     return (
         <div className={`message ${user}-message`}>
@@ -25,41 +26,20 @@ export function ChatMessages({ messages = [] }) {
 }
 
 export function ChatInput({ onAddMessage }) {
-    const [isSubmitting, setIsSubmitting] = React.useState(false);
-    function handleSubmit(e) {
-        e.preventDefault();
-        if (isSubmitting) return;
-
-        const formData = new FormData(e.target);
-
-        const message = formData.get("message").trim();
-        if (!message) return;
-
-        if (onAddMessage) {
-            onAddMessage(message);
-        }
-        e.target.reset();
-        setIsSubmitting(true)
-
-        setTimeout(() => {
-            setIsSubmitting(false);
-        }, 1000);
-    }
     return (
+
         <div className="chat-input-container">
-            <form className="chat-input-wrapper"
-                onSubmit={handleSubmit}>
+            <Form method="post" className="chat-input-wrapper">
                 <textarea
                     name="message"
                     className="chat-input"
                     placeholder="Type your message here..."
                     rows="1"
-                    disabled={isSubmitting}
+                    required
                 />
-                <button className="send-button" type="submit" disabled={isSubmitting}>
-                    {isSubmitting ? "Sending..." : "Send"}
+                <button className="send-button" type="submit">
                 </button>
-            </form>
+            </Form>
         </div>
     )
 }
