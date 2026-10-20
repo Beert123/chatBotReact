@@ -1,6 +1,6 @@
 import postgres from "postgres";
 
-const connectionString = process.env.DATABASEURL;
+const connectionString = process.env.DATABASE_URL;
 
 if(!connectionString){
     throw new Error("noob")
