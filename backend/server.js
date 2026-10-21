@@ -7,8 +7,24 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 
-app.post("/api/threads", async (req,res) => {
-    
+app.get("/api/threads/:id", async (req, res) => {
+    try {
+        const value = req.params.id;
+        const result = await sql`
+        SELECT id, title, created_at
+        FROM threads 
+        WHERE id = ${value}
+        `
+        if(result.length === 0){
+            return res.status(404).json({error: "thread not found"})
+        }
+        res.json(result[0]);
+
+    } catch (e) {
+        console.error("Bums", e)
+        res.status(500).json({error: "failed to fetch from database"})
+    }
+
 })
 app.get("/api/threads", async (req, res) => {
     try {
