@@ -6,47 +6,32 @@ import { Form } from "react-router";
 
 
 export async function clientLoader({ params }) {
-
-    console.log("Route params:", params);
-
     const threadId = params.threadId;
-    console.log("Thread ID:", threadId);
 
-    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-    const supabasePublishableKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
-    const apiUrl = `${supabaseUrl}/threads?id=eq.${threadId}&select=*`
-    const res = await fetch(apiUrl, {
-        method: "GET",
-        headers: {
-            apikey: supabasePublishableKey,
-            Authorization: `Bearer ${supabasePublishableKey}`,
-        },
-    })
+    const apiURL = import.meta.env.VITE_API_URL;
+    const threadURL = `${apiURL}/api/threads/${threadId}`;
 
-    const data = await res.json();
-    const thread = data[0];
+    const threadRes = await fetch(threadURL)
 
-    if (!thread) {
-        throw new Response("Thread not found", { status: 404 });
+    if(threadRes.status === 404){
+        throw new Response("Thread not found", {status: 404})
     }
-    const messagesResponse = await fetch(
-        `${supabaseUrl}/messages?thread_id=eq.${threadId}&select=*&order=created_at.asc`,
-        {
-            headers: {
-                apikey: supabasePublishableKey,
-                Authorization: `Bearer ${supabasePublishableKey}`,
-            },
-        }
-    );
+    const thread = await threadRes.json();
+
+    const messagesResponse = await fetch(`${apiURL}/api/threads/${threadId}/messages`);
+
+    if(messagesResponse.status === 404){
+        throw new Response("Message not found", {status: 404})
+    }
+    
     const messages = await messagesResponse.json();
 
     return { thread, messages }
 }
 
 export async function clientAction({ params, request }) {
-    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
-    const supabasePublishableKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY
-
+    
+    const apiURL = import.meta.env.VITE_API_URL;
     const formData = await request.formData();
     const fieldValue = formData.get("message")
 
