@@ -10,7 +10,6 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 
 //GROQ endpoint fra API
-
 app.post("/api/test-groq", async (req, res) => {
     const api = process.env.GROQ_API_KEY;
 

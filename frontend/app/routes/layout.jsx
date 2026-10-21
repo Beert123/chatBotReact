@@ -1,26 +1,6 @@
 import { Outlet, useLoaderData } from "react-router";
 import Sidebar from "../Components/sidebar";
 
-
-const initThreads = [
-  {
-    id: "1",
-    title: "why-blue"
-  },
-  {
-    id: "2",
-    title: "testetsetste1"
-  },
-  {
-    id: "3",
-    title: "jasdjasjdasjd"
-  },
-  {
-    id: "4",
-    title: "min-morgenmad-er-lækker"
-  },
-]
-
 export async function clientLoader() {
   const apiUrl = import.meta.env.VITE_API_URL
   const url = `${apiUrl}/api/threads`;
