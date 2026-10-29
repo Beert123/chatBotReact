@@ -1,6 +1,7 @@
 import { useState } from "react"
 import React from "react";
 import { Form, useNavigation } from "react-router";
+
 export function Message({ user, children }) {
     return (
         <div className={`message ${user}-message`}>
@@ -12,11 +13,13 @@ export function Message({ user, children }) {
 }
 
 export function ChatMessages({ messages = [] }) {
+    console.log("messages:", messages);
+    console.log("Er det et array?", Array.isArray(messages));
     return (
         <main className="chat-container">
             <div className="chat-messages">
                 {messages.map(message => (
-                    <Message key={message.id} user={message.user}>
+                    <Message key={message.id} user={message.type}>
                         {message.content}
                     </Message>
                 ))}

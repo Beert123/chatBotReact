@@ -56,7 +56,7 @@ app.get("/api/threads/:id/messages", async (req, res) => {
         WHERE thread_id = ${value}
         ORDER BY created_at ASC
         `
-        res.json({ result })
+        res.json(result)
     } catch (e) {
         console.error("Messages id kunne ikke findes", e)
         res.status(500).json({ error: "failed to fetch from database" })
@@ -98,6 +98,29 @@ app.get("/api/threads", async (req, res) => {
         });
     }
 })
+
+app.delete("/api/threads/:id", async (req, res) => {
+    try {
+        const value = req.params.id
+        if(!value){
+            res.status(404).json({error: "elementet findes ikke"})
+        }
+        const result = await sql`
+        DELETE FROM threads
+        WHERE threads_id = ${value}
+        RETURNING threads_id`;
+        
+        if(!result.length === 0){
+            res.status(404).json({error: "thread not found"})
+        }
+
+        res.status(204).json({message: "element deleted succesfully", deletedThread: result[0].thread_id});
+    } catch (e) {
+        console.error("Error deleting thread", e)
+        res.status(500).json({error: "couldnt delete thread db connection is bad"})
+    }
+})
+
 app.get("/", (req, res) => {
     res.json({
         message: "Serveren er oppe"

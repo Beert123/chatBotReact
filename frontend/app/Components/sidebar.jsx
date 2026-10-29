@@ -31,7 +31,6 @@ export function SidebarFooter() {
 
 export function ChatThreadItem({ thread, onDelete }) {
     const { id, title } = thread;
-
     return (
         <li className="chat-thread-item">
             <NavLink

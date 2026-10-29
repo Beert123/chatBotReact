@@ -40,7 +40,6 @@ export async function clientAction({ params, request }) {
     }
 
     const newMessage = {
-        thread_id: params.threadId,
         type: "user",
         content: fieldValue.trim(),
     }
@@ -48,8 +47,6 @@ export async function clientAction({ params, request }) {
         const res = await fetch(`${supabaseUrl}messages`, {
             method: "POST",
             headers: {
-                apikey: supabasePublishableKey,
-                Authorization: `Bearer ${supabasePublishableKey}`,
                 "Content-Type": "application/json"
             },
             body: JSON.stringify(newMessage)
