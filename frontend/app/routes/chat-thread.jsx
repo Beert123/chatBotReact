@@ -30,8 +30,11 @@ export async function clientLoader({ params }) {
 }
 
 export async function clientAction({ params, request }) {
-    
+
+    const threadId = params.threadId;
     const apiURL = import.meta.env.VITE_API_URL;
+    const myUrl = `${apiURL}/api/threads/${threadId}/messages`
+
     const formData = await request.formData();
     const fieldValue = formData.get("message")
 
@@ -44,7 +47,7 @@ export async function clientAction({ params, request }) {
         content: fieldValue.trim(),
     }
     try {
-        const res = await fetch(`${supabaseUrl}messages`, {
+        const res = await fetch(myUrl, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -52,8 +55,9 @@ export async function clientAction({ params, request }) {
             body: JSON.stringify(newMessage)
         })
 
-        if (!res.ok) {
-            return { error: "coudlnt fetch supabase message" }
+        if (res.status === 400) {
+            const error = await res.json();
+            return { error: "Invalid messages data" || error.error }
         }
 
         return { succes: true }

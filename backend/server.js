@@ -9,6 +9,8 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 
+app.use(express.json());
+
 //GROQ endpoint fra API
 app.post("/api/test-groq", async (req, res) => {
     const api = process.env.GROQ_API_KEY;
@@ -98,26 +100,48 @@ app.get("/api/threads", async (req, res) => {
         });
     }
 })
+app.post("/api/threads/:id/messages", async (req, res) => {
+    try {
+        const threadId = req.params.id;
+        if (!threadId) {
+            return res.status(500).json({ error: "no thread with taht id" })
+        }
+        const type = req.body.type;
+        const content = req.body.content;
+        if(!type || !content){
+            return res.status(400).json({error: "both type and content must be declared"})
+        }
+        const result = await sql`
+        INSERT INTO messages (thread_id,type,content)
+        VALUES(${threadId}, ${type}, ${content})
+        RETURNING *`
+
+        res.status(201).json(result[0])
+    } catch (e) {
+        console.error("error with the databse", e)
+        res.status(500).json({error: e})
+    }
+})
 
 app.delete("/api/threads/:id", async (req, res) => {
     try {
-        const value = req.params.id
-        if(!value){
-            res.status(404).json({error: "elementet findes ikke"})
+        const value = req.params.id;
+        if (!value) {
+            res.status(404).json({ error: "elementet findes ikke" })
         }
         const result = await sql`
         DELETE FROM threads
         WHERE threads_id = ${value}
         RETURNING threads_id`;
-        
-        if(!result.length === 0){
-            res.status(404).json({error: "thread not found"})
+
+        if (!result.length === 0) {
+            res.status(404).json({ error: "thread not found" })
         }
 
-        res.status(204).json({message: "element deleted succesfully", deletedThread: result[0].thread_id});
+        res.status(204).json({ message: "element deleted succesfully", deletedThread: result[0].thread_id });
     } catch (e) {
         console.error("Error deleting thread", e)
-        res.status(500).json({error: "couldnt delete thread db connection is bad"})
+        res.status(500).json({ error: "couldnt delete thread db connection is bad" })
     }
 })
 
