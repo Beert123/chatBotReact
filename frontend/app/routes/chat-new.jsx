@@ -5,58 +5,42 @@ import { Form, redirect } from "react-router";
 
 
 export async function clientAction({ params, request }) {
-    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
-    const supabasePublishableKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY
+    const apiURL = import.meta.env.VITE_API_URL
 
     const formData = await request.formData();
-    const fieldValue = formData.get("message")
+    const content = formData.get("message")
 
-    if (!fieldValue || !fieldValue.trim()) {
+    if (!content || !content.trim()) {
         return { error: "Empty message" }
     }
 
     const title =
-        fieldValue.trim().length > 50
-            ? fieldValue.trim().slice(0, 50) + "..."
-            : fieldValue.trim();
+        content.trim().length > 50
+            ? content.trim().slice(0, 50) + "..."
+            : content.trim();
 
     try {
-        const threadResponse = await fetch(`${supabaseUrl}threads`, {
+        const res = await fetch(`${apiURL}/api/threads`, {
             method: "POST",
-            headers: {
-                apikey: supabasePublishableKey,
-                Authorization: `Bearer ${supabasePublishableKey}`,
-                "Content-Type": "application/json",
-                Prefer: "return=representation",
-            },
-            body: JSON.stringify({ title })
-        })
-        if (!threadResponse.ok) {
-            return { error: "couldnt create thread" + threadResponse.status }
-        }
-        const [thread] = await threadResponse.json();
-
-        const messageResponse = await fetch(`${supabaseUrl}messages`, {
-            method: "POST",
-            headers: {
-                apikey: supabasePublishableKey,
-                Authorization: `Bearer ${supabasePublishableKey}`,
-                "Content-Type": "application/json",
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                thread_id: thread.id,
-                type: "user",
-                content: fieldValue.trim(),
-            }),
-        });
-        
-        if(!messageResponse || !messageResponse.trim()){
-            return {error: "no message" + messageResponse.status}
+                title: title,
+                content: content.trim(),
+            })
+        })
+        if (res.status === 400) {
+            const error = await response.json();
+            return { error: error.error || "Invalid thread data" };
+        }
+        if (!res.ok) {
+            return { error: `Failed to create thread: ${res.status}` };
         }
 
-        //den her virker ikke
-        return redirect(`/chat/${thread.id}`);
-    } catch (e) {
+        const data = await res.json();
+        return redirect(`/chat/${data.thread.id}`)
+    }
+
+    catch (e) {
         return { error: e.message }
     }
 }
