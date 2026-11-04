@@ -1,9 +1,8 @@
 import { useState } from "react";
-import { useActionData, useParams } from "react-router";
+import { Outlet, useActionData, useParams, Link } from "react-router";
 import { ChatMessages, ChatInput } from "../components/Chat.jsx";
 import { useLoaderData } from "react-router";
 import { Form } from "react-router";
-
 
 export async function clientLoader({ params }) {
     const threadId = params.threadId;
@@ -13,17 +12,17 @@ export async function clientLoader({ params }) {
 
     const threadRes = await fetch(threadURL)
 
-    if(threadRes.status === 404){
-        throw new Response("Thread not found", {status: 404})
+    if (threadRes.status === 404) {
+        throw new Response("Thread not found", { status: 404 })
     }
     const thread = await threadRes.json();
 
     const messagesResponse = await fetch(`${apiURL}/api/threads/${threadId}/messages`);
 
-    if(messagesResponse.status === 404){
-        throw new Response("Message not found", {status: 404})
+    if (messagesResponse.status === 404) {
+        throw new Response("Message not found", { status: 404 })
     }
-    
+
     const messages = await messagesResponse.json();
 
     return { thread, messages }
@@ -78,8 +77,11 @@ export default function ChatThread() {
     }
     return (
         <main className="chat-container">
+            <Outlet />
+
             <div className="chat-thread-header">
                 <h2>Conversation Thread {threadId}</h2>
+                <Link to="edit" className="thread-title-edit-link">Edit</Link>
             </div>
             <ChatMessages messages={messages} />
             <ChatInput onAddMessage={addMessage} />
