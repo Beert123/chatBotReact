@@ -169,6 +169,35 @@ app.delete("/api/threads/:id", async (req, res) => {
         res.status(500).json({ error: "couldnt delete thread db connection is bad" })
     }
 })
+app.patch("/api/threads/:id", async (req,res) =>{
+    try{
+        const threadId = req.params.id;
+        const threadTitle = req.body.title.trim();
+
+        if(!threadTitle || threadTitle.length === 0){
+            res.status(400).json({error: "validation error please enter valid thread"})
+        }
+        if(!threadId){
+            res.status(400).json({error: "please fill out an id"})
+        }
+
+        const result = await sql`
+        UPDATE threads 
+        SET title = ${threadTitle}
+        WHERE id =${threadId}
+        RETURNING title, id`
+
+        if(result.length === 0){
+            res.status(404).json({error: "thread doesnt exist try another id"})
+        }
+
+        res.json(result[0]);
+
+    }catch(e){
+        console.error("Error updating thread", e)
+        res.status(500).json({error: "couldnt update thrad", e})
+    }
+})
 
 app.get("/", (req, res) => {
     res.json({
