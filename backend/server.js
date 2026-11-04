@@ -108,8 +108,8 @@ app.post("/api/threads/:id/messages", async (req, res) => {
         }
         const type = req.body.type;
         const content = req.body.content;
-        if(!type || !content){
-            return res.status(400).json({error: "both type and content must be declared"})
+        if (!type || !content) {
+            return res.status(400).json({ error: "both type and content must be declared" })
         }
         const result = await sql`
         INSERT INTO messages (thread_id,type,content)
@@ -119,15 +119,33 @@ app.post("/api/threads/:id/messages", async (req, res) => {
         res.status(201).json(result[0])
     } catch (e) {
         console.error("error with the databse", e)
-        res.status(500).json({error: e})
+        res.status(500).json({ error: e })
     }
 })
-app.post("/api/threads", async (req,res) => {
-    try{
+app.post("/api/threads", async (req, res) => {
+    try {
+        const { title, content } = req.body;
+        if (!title?.trim() || !content?.trim()) {
+            return res.status(404).json({ error: "title and/or content must be filled" })
+        }
+        const resultThread = await sql`
+        INSERT INTO threads (title)
+        VALUES (${title})
+        RETURNING id`
+        const thread = resultThread[0];
 
-    }catch(e){
-        console.error("error with server connection", e)
-        return res.status(500).json({error: e})
+        const resultMessage = await sql`
+        INSERT INTO messages(thread_id, content, type)
+        VALUES (${thread.id}, ${content}, ${"user"})
+        RETURNING content`
+        const message = resultMessage[0];
+
+        res.status(201).json({thread: thread, message: message})
+
+
+    } catch (e) {
+        console.error("error with creating thread", e)
+        return res.status(500).json({ error: e })
     }
 })
 app.delete("/api/threads/:id", async (req, res) => {
