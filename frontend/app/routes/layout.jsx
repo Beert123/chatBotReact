@@ -11,6 +11,24 @@ export async function clientLoader() {
 
   return { threads: threads};
 }
+export async function clientAction({params}){
+  const apiUrl = import.meta.env.VITE_API_URL;
+  const threadId = params.threadId;
+  const formData = await request.formData();
+
+  try{
+    const res = await fetch(`${apiUrl}/api/threads/${threadId}`, {
+      method: "DELETE",
+    });
+    if(!res.ok){
+      return {error: "failed to delete thread"}
+    }
+
+    return {succes: true}
+  }catch(e){
+    return {error: e.message}
+  }
+}
 
 export default function Layout() {
   const { threads } = useLoaderData();

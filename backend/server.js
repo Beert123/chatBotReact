@@ -122,7 +122,14 @@ app.post("/api/threads/:id/messages", async (req, res) => {
         res.status(500).json({error: e})
     }
 })
+app.post("/api/threads", async (req,res) => {
+    try{
 
+    }catch(e){
+        console.error("error with server connection", e)
+        return res.status(500).json({error: e})
+    }
+})
 app.delete("/api/threads/:id", async (req, res) => {
     try {
         const value = req.params.id;
