@@ -6,5 +6,5 @@ const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 if(!supabaseAnonKey || !supabaseUrl){
     throw new Error("couldnt connect to db");
 }
-
-export const supabase = createClient(supabaseUrl,supabaseAnonKey);
+console.log(supabaseUrl, supabaseAnonKey)
+export const supabase = createClient(supabaseUrl, supabaseAnonKey);
