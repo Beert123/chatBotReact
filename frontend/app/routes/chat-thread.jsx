@@ -3,21 +3,19 @@ import { Outlet, useActionData, useParams, Link } from "react-router";
 import { ChatMessages, ChatInput } from "../components/Chat.jsx";
 import { useLoaderData } from "react-router";
 import { Form } from "react-router";
+import { apiFetch } from "../lib/apiFetch.js";
 
 export async function clientLoader({ params }) {
     const threadId = params.threadId;
 
-    const apiURL = import.meta.env.VITE_API_URL;
-    const threadURL = `${apiURL}/api/threads/${threadId}`;
-
-    const threadRes = await fetch(threadURL)
+    const threadRes = await apiFetch(`/api/threads/${threadId}`);
 
     if (threadRes.status === 404) {
         throw new Response("Thread not found", { status: 404 })
     }
     const thread = await threadRes.json();
 
-    const messagesResponse = await fetch(`${apiURL}/api/threads/${threadId}/messages`);
+    const messagesResponse = await apiFetch(`/api/threads/${threadId}/messages`);
 
     if (messagesResponse.status === 404) {
         throw new Response("Message not found", { status: 404 })
@@ -31,9 +29,6 @@ export async function clientLoader({ params }) {
 export async function clientAction({ params, request }) {
 
     const threadId = params.threadId;
-    const apiURL = import.meta.env.VITE_API_URL;
-    const myUrl = `${apiURL}/api/threads/${threadId}/messages`
-
     const formData = await request.formData();
     const fieldValue = formData.get("message")
 
@@ -46,7 +41,7 @@ export async function clientAction({ params, request }) {
         content: fieldValue.trim(),
     }
     try {
-        const res = await fetch(myUrl, {
+        const res = await apiFetch(`/api/threads/${threadId}/messages`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
